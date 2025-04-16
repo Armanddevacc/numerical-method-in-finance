@@ -13813,8 +13813,8 @@ $$</p>
 $$</p>
 <p>We define the vectors:</p>
 <ul>
-<li>$V^k = [V_1^k, V_2^k, \dots, V_{N-1}^k]^T$</li>
-<li>$V^{k+1} = [V_1^{k+1}, V_2^{k+1}, \dots, V_{N-1}^{k+1}]^T$</li>
+<li>$V^k = [V_0^k, V_1^k, \dots, V_{N}^k]^T$</li>
+<li>$V^{k+1} = [V_0^{k+1}, V_1^{k+1}, \dots, V_{N}^{k+1}]^T$</li>
 </ul>
 <p>Then the system can be written as:</p>
 <p>$$
@@ -13823,27 +13823,57 @@ $$</p>
 <h5 id="Matrix-$%5Cmathbf%7BM%7D$-(left-hand-side,-unknowns-at-$k+1$)">Matrix $\mathbf{M}$ (left-hand side, unknowns at $k+1$)<a class="anchor-link" href="#Matrix-$%5Cmathbf%7BM%7D$-(left-hand-side,-unknowns-at-$k+1$)">¶</a></h5><p>$$
 \mathbf{M} =
 \begin{bmatrix}
-1 - B_1^{k+1} &amp; -C_1^{k+1} &amp; 0 &amp; \cdots &amp; 0 \\
--A_2^{k+1} &amp; 1 - B_2^{k+1} &amp; -C_2^{k+1} &amp; \ddots &amp; \vdots \\
-0 &amp; -A_3^{k+1} &amp; 1 - B_3^{k+1} &amp; \ddots &amp; 0 \\
-\vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; -C_{N-2}^{k+1} \\
-0 &amp; \cdots &amp; 0 &amp; -A_{N-1}^{k+1} &amp; 1 - B_{N-1}^{k+1}
+ -A_1^{k+1} &amp; 1 - B_1^{k+1} &amp; -C_1^{k+1} &amp; 0 &amp; \cdots &amp; 0 \\
+ 0 &amp; -A_2^{k+1} &amp; 1 - B_2^{k+1} &amp; -C_2^{k+1} &amp; \ddots &amp; \vdots \\
+ 0 &amp; 0 &amp; -A_3^{k+1} &amp; 1 - B_3^{k+1} &amp; \ddots &amp; 0 \\
+ \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; -C_{N-2}^{k+1} \\
+ 0 &amp; \cdots &amp; 0 &amp; -A_{N-1}^{k+1} &amp; 1 - B_{N-1}^{k+1} &amp; -C_{N-1}^{k+1}
 \end{bmatrix}
 $$</p>
 <h5 id="Matrix-$%5Cmathbf%7BN%7D$-(right-hand-side,-known-at-$k$)">Matrix $\mathbf{N}$ (right-hand side, known at $k$)<a class="anchor-link" href="#Matrix-$%5Cmathbf%7BN%7D$-(right-hand-side,-known-at-$k$)">¶</a></h5><p>$$
 \mathbf{N} =
 \begin{bmatrix}
-1 + B_1^k &amp; C_1^k &amp; 0 &amp; \cdots &amp; 0 \\
-A_2^k &amp; 1 + B_2^k &amp; C_2^k &amp; \ddots &amp; \vdots \\
-0 &amp; A_3^k &amp; 1 + B_3^k &amp; \ddots &amp; 0 \\
-\vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; C_{N-2}^k \\
-0 &amp; \cdots &amp; 0 &amp; A_{N-1}^k &amp; 1 + B_{N-1}^k
+ A_1^k &amp; 1 + B_1^k &amp; C_1^k &amp; 0 &amp; \cdots &amp; 0 \\
+ 0 &amp; A_2^k &amp; 1 + B_2^k &amp; C_2^k &amp; \ddots &amp; \vdots \\
+ 0 &amp; 0 &amp; A_3^k &amp; 1 + B_3^k &amp; \ddots &amp; 0 \\
+ \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; C_{N-2}^k \\
+ 0 &amp; \cdots &amp; 0 &amp; A_{N-1}^k &amp; 1 + B_{N-1}^k &amp; C_{N-1}^k
 \end{bmatrix}
 $$</p>
 <p><strong>So what we want is to determine $V^{k+1}$</strong></p>
 <p>The two matrices have N-1 rows and N+1 columns, this is our representation of N-1 equations and N+1 unknowns. To solve we would like to write the past equation as:</p>
 <p>$$M_L^{k+1} v^{k+1} + r^k = M_R^{k} v^k$$</p>
-<p>where $M_L^{k+1}$ and $M_L^{k}$ and $r^k$ are known with $r^k$ being boundary conditions. We know $v^k$ but we want to find $V^{k+1}$. Then we could simply write $V^{k+1} = (M_L^{k+1})^{-1}(M_R^{k} v^k - r^k)$. However the matrix inversion is very time consuming knowing M is tridiagonal. There are many ways to solve this system: LU decomposition and successive over-relaxation, Gauss-Seidel, Jacobi. LU-decomposition is a direct solution wheras successive over-relaxation is done though iterating .</p>
+<p>where $M_L^{k+1}$ and $M_L^{k}$ and $r^k$ are known with $r^k$ being boundary conditions: for instance value on the boundary i = 0 $V(0,T) = Ee^{-r(T-t)}$.</p>
+<p>$$
+M_R^{k} v^k=
+
+
+\underbrace{
+\begin{pmatrix}
+-A_1^{k+1} &amp; 1 - B_1^{k+1} &amp; -C_1^{k+1} &amp; 0 &amp; \cdots &amp; 0 \\
+0 &amp; -A_2^{k+1} &amp; 1 - B_2^{k+1} &amp; -C_2^{k+1} &amp; \ddots &amp; \vdots \\
+\vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; 0 \\
+0 &amp; \cdots &amp; 0 &amp; -A_{I-1}^{k+1} &amp; 1 - B_{I-1}^{k+1} &amp; -C_{I-1}^{k+1}
+\end{pmatrix}
+}_{\mathbf{M}_L^{k+1}}
+\cdot
+\begin{pmatrix}
+V_1^{k+1} \\
+V_2^{k+1} \\
+\vdots \\
+V_{I}^{k+1}
+\end{pmatrix}
++
+\begin{pmatrix}
+A_1^{k+1} V_0^{k+1} \\
+0 \\
+\vdots \\
+0
+\end{pmatrix}
+=
+\mathbf{M}_L^{k+1} \, \mathbf{v}^{k+1} + \mathbf{r}^k
+$$</p>
+<p>We know $v^k$ but we want to find $V^{k+1}$. Then we could simply write $V^{k+1} = (M_L^{k+1})^{-1}(M_R^{k} v^k - r^k)$. However the matrix inversion is very time consuming knowing M is tridiagonal. There are many ways to solve this system: LU decomposition and successive over-relaxation, Gauss-Seidel, Jacobi. LU-decomposition is a direct solution wheras successive over-relaxation is done though iterating .</p>
 <h5 id="LU-decomposition">LU decomposition<a class="anchor-link" href="#LU-decomposition">¶</a></h5><p>We consider the tridiagonal linear system from the Crank-Nicolson scheme:</p>
 <p>$$
 \mathbf{M} \cdot V^{k+1} = \mathbf{N} \cdot V^k

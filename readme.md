@@ -2,6 +2,8 @@
 
 
 
+[Notebook du Projet](https://armanddevacc.github.io/numerical-method-in-finance/numerical-method.html)
+
 ## Steps to set up the environment and install the required libraries
 1. Installing uv                            
     `pip install uv`
